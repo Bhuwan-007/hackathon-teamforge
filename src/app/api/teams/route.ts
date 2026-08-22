@@ -40,5 +40,9 @@ export async function POST() {
     } satisfies TeamMatch;
   });
 
-  return NextResponse.json({ teams: matches });
+  const topTeams = matches
+    .sort((a, b) => b.overallMatch - a.overallMatch)
+    .slice(0, 5);
+
+  return NextResponse.json({ teams: topTeams });
 }

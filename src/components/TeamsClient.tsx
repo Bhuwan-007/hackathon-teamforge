@@ -5,6 +5,7 @@ import { LoaderCircle, Plug } from "lucide-react";
 import { useState } from "react";
 import { TeamMatch } from "@/lib/types";
 import { TeamMatchCard } from "./TeamMatchCard";
+import { useUser } from "@/hooks/use-user";
 
 const stages = [
   "Analyzing participants...",
@@ -14,6 +15,7 @@ const stages = [
 ];
 
 export function TeamsClient() {
+  const { profile } = useUser();
   const [stage, setStage] = useState(-1);
   const [teams, setTeams] = useState<TeamMatch[]>([]);
   const [error, setError] = useState("");
@@ -111,7 +113,7 @@ export function TeamsClient() {
             className="grid gap-8 lg:grid-cols-2"
           >
             {teams.map((team, index) => (
-              <TeamMatchCard key={team.id} team={team} index={index} />
+              <TeamMatchCard key={team.id} team={team} index={index} currentProfileId={profile?.id} />
             ))}
           </motion.div>
         )}

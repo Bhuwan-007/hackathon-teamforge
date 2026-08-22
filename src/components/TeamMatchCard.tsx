@@ -1,5 +1,6 @@
 import { AlertTriangle, Check, Users } from "lucide-react";
 import { TeamMatch } from "@/lib/types";
+import { GitHubBadge } from "./GitHubBadge";
 
 const scoreLabels: { key: keyof TeamMatch["scores"]; label: string }[] = [
   { key: "coverage", label: "Skill Coverage" },
@@ -20,12 +21,21 @@ function initials(name: string) {
 export function TeamMatchCard({
   team,
   index,
+  currentProfileId,
 }: {
   team: TeamMatch;
   index: number;
+  currentProfileId?: string;
 }) {
+  const isMyTeam = currentProfileId && team.members.some(m => m.id === currentProfileId);
+  
   return (
-    <article className="switchboard-panel overflow-hidden">
+    <article className={`switchboard-panel overflow-hidden relative ${isMyTeam ? "ring-4 ring-[#D35400] shadow-[0_0_20px_rgba(211,84,0,0.3)]" : ""}`}>
+      {isMyTeam && (
+        <div className="absolute top-0 right-0 bg-[#D35400] text-[#F4F1EA] px-4 py-1 text-xs font-bold uppercase tracking-widest z-10 border-b-2 border-l-2 border-[#2D241E]">
+          Your Team
+        </div>
+      )}
       <div className="border-b-4 border-[#2D241E] bg-[#D8D1C5] p-5">
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -45,18 +55,26 @@ export function TeamMatchCard({
             </div>
           </div>
         </div>
-        <div className="mt-6 flex flex-wrap gap-2">
-          {team.members.map((member) => (
-            <div
-              key={member.id}
-              className="flex items-center gap-2 border-2 border-[#2D241E] bg-[#FAF9F6] px-2 py-1 text-xs font-bold"
-            >
-              <span className="grid size-7 place-items-center rounded-full bg-[#D35400] text-[10px] text-[#F4F1EA]">
-                {initials(member.name)}
-              </span>
-              <span>{member.name.split(" ")[0]}</span>
-            </div>
-          ))}
+        <div className="mt-6 flex flex-col gap-2">
+          {team.members.map((member) => {
+            const isMe = member.id === currentProfileId;
+            return (
+              <div
+                key={member.id}
+                className={`flex items-center justify-between border-2 border-[#2D241E] px-3 py-2 text-xs font-bold ${isMe ? "bg-[#D35400] text-[#F4F1EA]" : "bg-[#FAF9F6]"}`}
+              >
+                <div className="flex items-center gap-3">
+                  <span className={`grid size-7 place-items-center rounded-full text-[10px] ${isMe ? "bg-[#F4F1EA] text-[#D35400]" : "bg-[#D35400] text-[#F4F1EA]"}`}>
+                    {initials(member.name)}
+                  </span>
+                  <span className="text-sm">{member.name.split(" ")[0]} {isMe && <span className="opacity-75 font-normal">(You)</span>}</span>
+                </div>
+                {member.github_username && (
+                  <GitHubBadge username={member.github_username} />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 

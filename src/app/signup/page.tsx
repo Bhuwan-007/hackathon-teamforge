@@ -45,6 +45,9 @@ export default function JoinPage() {
 
   // Form State
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [githubUsername, setGithubUsername] = useState("");
   const [experience, setExperience] = useState("");
   const [selectedSkills, setSelectedSkills] = useState<Record<string, number>>(
     {},
@@ -90,6 +93,8 @@ export default function JoinPage() {
 
     if (
       !name ||
+      !email ||
+      !password ||
       !experience ||
       roles.length === 0 ||
       availability.length === 0
@@ -99,9 +104,24 @@ export default function JoinPage() {
       return;
     }
 
+    // 1. Sign up the user
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+    });
+
+    if (authError || !authData.user) {
+      setError(authError?.message || "Signup failed.");
+      setLoading(false);
+      return;
+    }
+
+    // 2. Insert profile linked to auth user
     const { error: dbError } = await supabase.from("profiles").insert([
       {
+        user_id: authData.user.id,
         name: `${name} (${experience})`,
+        github_username: githubUsername || null,
         skills: skillsArray,
         role_preferences: roles,
         interests,
@@ -139,15 +159,55 @@ export default function JoinPage() {
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Basic Info */}
               <div className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Jane Doe"
-                    required
-                  />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="email">Email *</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="hacker@example.com"
+                      className="rounded-none border-2 border-[#2D241E] bg-[#F4F1EA]"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="password">Password *</Label>
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="min 6 characters"
+                      className="rounded-none border-2 border-[#2D241E] bg-[#F4F1EA]"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="name">Full Name *</Label>
+                    <Input
+                      id="name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      placeholder="Jane Doe"
+                      className="rounded-none border-2 border-[#2D241E] bg-[#F4F1EA]"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="github">GitHub Username (Optional)</Label>
+                    <Input
+                      id="github"
+                      value={githubUsername}
+                      onChange={(e) => setGithubUsername(e.target.value)}
+                      placeholder="torvalds"
+                      className="rounded-none border-2 border-[#2D241E] bg-[#F4F1EA]"
+                    />
+                  </div>
                 </div>
 
                 <div>

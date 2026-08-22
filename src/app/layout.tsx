@@ -18,13 +18,19 @@ export const metadata: Metadata = {
     "Connect with builders who complement your stack and are ready to ship.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+import { UserProvider } from "@/hooks/use-user";
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        <UserProvider>
+          {children}
+        </UserProvider>
+      </body>
     </html>
   );
 }
