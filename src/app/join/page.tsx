@@ -152,10 +152,10 @@ export default function JoinPage() {
                     <div key={skill} className="grid grid-cols-[120px_1fr_40px] items-center gap-4">
                       <span className="text-sm font-medium">{skill}</span>
                       <Slider
-                        defaultValue={[score]}
+                        value={[score]}
                         max={10}
                         step={1}
-                        onValueChange={(vals) => handleSkillScore(skill, vals[0])}
+                        onValueChange={(vals) => handleSkillScore(skill, Array.isArray(vals) ? vals[0] : vals)}
                       />
                       <span className="text-sm font-mono text-right">{score}/10</span>
                     </div>
