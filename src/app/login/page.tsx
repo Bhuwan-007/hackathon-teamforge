@@ -45,10 +45,10 @@ export default function LoginPage() {
         <Card className="switchboard-panel w-full max-w-md mt-10 rounded-none border-4 border-[#2D241E]">
           <CardHeader className="bg-[#2D241E] text-[#F4F1EA] border-b-4 border-[#2D241E] rounded-none px-6 py-6">
             <CardTitle className="font-heavy text-2xl font-extrabold uppercase tracking-tight leading-none">
-              Initialize Session
+               Login
             </CardTitle>
-            <CardDescription className="text-[#F4F1EA]/80 font-mono mt-2">
-              Log in to the TeamForge network.
+            <CardDescription className="font-bold text-xs uppercase tracking-widest mt-2">
+              Log in to the Hackers Assemble!! network.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6 md:p-8">

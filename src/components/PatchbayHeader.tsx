@@ -20,7 +20,7 @@ export function PatchbayHeader() {
         </div>
         <div>
           <h1 className="font-heavy text-3xl font-extrabold uppercase tracking-tight text-[#2D241E] leading-none">
-            TeamForge
+            Hackers Assemble!!
           </h1>
           <p className="text-[10px] font-bold text-[#D35400] uppercase tracking-widest mt-1">
             Find the one to build with

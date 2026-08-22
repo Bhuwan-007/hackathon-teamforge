@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "HackSync | Find your hackathon team",
+  title: "Hackers Assemble!! | Find your hackathon team",
   description:
     "Connect with builders who complement your stack and are ready to ship.",
 };
