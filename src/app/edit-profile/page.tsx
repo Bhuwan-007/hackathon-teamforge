@@ -2,9 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@/hooks/use-user";
 import { supabase } from "@/lib/supabase";
 import { SKILL_TAXONOMY, SkillCategory } from "@/lib/types";
+import { useUser } from "@/hooks/use-user";
 import {
   Card,
   CardContent,
@@ -39,31 +39,41 @@ const INTEREST_OPTIONS = [
 const AVAILABILITY_OPTIONS = ["weekday evenings", "weekend", "flexible"];
 const EXPERIENCE_LEVELS = ["Junior", "Mid", "Senior"];
 
-export default function JoinPage() {
+export default function EditProfilePage() {
   const router = useRouter();
-  const { user, loading: userLoading } = useUser();
+  const { user, profile, loading: userLoading } = useUser();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    if (!userLoading && user) {
-      router.push("/edit-profile");
-    }
-  }, [user, userLoading, router]);
-
   // Form State
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [githubUsername, setGithubUsername] = useState("");
   const [experience, setExperience] = useState("");
   const [customSkill, setCustomSkill] = useState("");
-  const [selectedSkills, setSelectedSkills] = useState<Record<string, number>>(
-    {},
-  );
+  const [selectedSkills, setSelectedSkills] = useState<Record<string, number>>({});
   const [roles, setRoles] = useState<string[]>([]);
   const [interests, setInterests] = useState<string[]>([]);
   const [availability, setAvailability] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (profile) {
+      const expMatch = profile.name.match(/\(([^)]+)\)$/);
+      const exp = expMatch ? expMatch[1] : "";
+      setExperience(exp);
+      setName(profile.name.replace(` (${exp})`, ""));
+      setGithubUsername(profile.github_username || "");
+      
+      const skillsMap: Record<string, number> = {};
+      profile.skills.forEach(s => skillsMap[s.name] = s.score);
+      setSelectedSkills(skillsMap);
+      
+      setRoles(profile.role_preferences);
+      setInterests(profile.interests);
+      setAvailability(profile.availability);
+    } else if (!userLoading && !user) {
+      router.push("/login");
+    }
+  }, [profile, user, userLoading, router]);
 
   const handleSkillToggle = (skill: string) => {
     setSelectedSkills((prev) => {
@@ -99,18 +109,17 @@ export default function JoinPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
     setLoading(true);
     setError(null);
 
-    const skillsArray = Object.entries(selectedSkills).map(([name, score]) => ({
-      name,
+    const skillsArray = Object.entries(selectedSkills).map(([n, score]) => ({
+      name: n,
       score,
     }));
 
     if (
       !name ||
-      !email ||
-      !password ||
       !experience ||
       roles.length === 0 ||
       availability.length === 0
@@ -120,31 +129,14 @@ export default function JoinPage() {
       return;
     }
 
-    // 1. Sign up the user
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (authError || !authData.user) {
-      setError(authError?.message || "Signup failed.");
-      setLoading(false);
-      return;
-    }
-
-    // 2. Insert profile linked to auth user
-    const { error: dbError } = await supabase.from("profiles").insert([
-      {
-        user_id: authData.user.id,
+    const { error: dbError } = await supabase.from("profiles").update({
         name: `${name} (${experience})`,
         github_username: githubUsername || null,
         skills: skillsArray,
         role_preferences: roles,
         interests,
         availability,
-        team_size_preference: 4, // Defaulting for now
-      },
-    ]);
+    }).eq("user_id", user.id);
 
     setLoading(false);
     if (dbError) {
@@ -153,6 +145,10 @@ export default function JoinPage() {
       router.push("/teams");
     }
   };
+
+  if (userLoading) {
+    return <div className="p-10 text-center">Loading...</div>;
+  }
 
   return (
     <main
@@ -165,43 +161,16 @@ export default function JoinPage() {
         <Card className="switchboard-panel rounded-none overflow-hidden mt-10">
           <CardHeader className="bg-[#D8D1C5] border-b-4 border-[#2D241E] rounded-none">
             <CardTitle className="font-heavy text-3xl uppercase">
-              Join the Hackathon
+              Edit Profile
             </CardTitle>
             <CardDescription>
-              Tell us about your skills so we can find you the perfect team.
+              Update your skills, availability, and interests.
             </CardDescription>
           </CardHeader>
           <CardContent className="p-6 md:p-8">
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Basic Info */}
               <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="email">Email *</Label>
-                    <Input
-                      id="email"
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="hacker@example.com"
-                      className="rounded-none border-2 border-[#2D241E] bg-[#F4F1EA]"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="password">Password *</Label>
-                    <Input
-                      id="password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      placeholder="min 6 characters"
-                      className="rounded-none border-2 border-[#2D241E] bg-[#F4F1EA]"
-                      required
-                    />
-                  </div>
-                </div>
-
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="name">Full Name *</Label>
@@ -399,7 +368,7 @@ export default function JoinPage() {
                 className="switchboard-button w-full justify-center font-heavy uppercase rounded-none"
                 disabled={loading}
               >
-                {loading ? "Submitting..." : "Join Hackathon"}
+                {loading ? "Saving..." : "Save Changes"}
               </Button>
             </form>
           </CardContent>

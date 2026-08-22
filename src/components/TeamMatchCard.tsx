@@ -1,6 +1,8 @@
 import { AlertTriangle, Check, Users } from "lucide-react";
-import { TeamMatch } from "@/lib/types";
+import { TeamMatch, Profile } from "@/lib/types";
 import { GitHubBadge } from "./GitHubBadge";
+import { ProfileModal } from "./ProfileModal";
+import { useState } from "react";
 
 const scoreLabels: { key: keyof TeamMatch["scores"]; label: string }[] = [
   { key: "coverage", label: "Skill Coverage" },
@@ -27,6 +29,7 @@ export function TeamMatchCard({
   index: number;
   currentProfileId?: string;
 }) {
+  const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const isMyTeam = currentProfileId && team.members.some(m => m.id === currentProfileId);
   
   return (
@@ -61,7 +64,8 @@ export function TeamMatchCard({
             return (
               <div
                 key={member.id}
-                className={`flex items-center justify-between border-2 border-[#2D241E] px-3 py-2 text-xs font-bold ${isMe ? "bg-[#D35400] text-[#F4F1EA]" : "bg-[#FAF9F6]"}`}
+                onClick={() => setSelectedProfile(member)}
+                className={`flex items-center justify-between border-2 border-[#2D241E] px-3 py-2 text-xs font-bold cursor-pointer hover:-translate-y-0.5 hover:shadow-[2px_2px_0px_#2D241E] transition-all ${isMe ? "bg-[#D35400] text-[#F4F1EA]" : "bg-[#FAF9F6]"}`}
               >
                 <div className="flex items-center gap-3">
                   <span className={`grid size-7 place-items-center rounded-full text-[10px] ${isMe ? "bg-[#F4F1EA] text-[#D35400]" : "bg-[#D35400] text-[#F4F1EA]"}`}>
@@ -131,6 +135,9 @@ export function TeamMatchCard({
           </div>
         </div>
       </div>
+      {selectedProfile && (
+        <ProfileModal profile={selectedProfile} onClose={() => setSelectedProfile(null)} />
+      )}
     </article>
   );
 }

@@ -3,9 +3,11 @@
 import { useRouter } from "next/navigation";
 import { PatchbayHeader } from "../components/PatchbayHeader";
 import { PatchbayIntro } from "../components/PatchbayIntro";
+import { useUser } from "@/hooks/use-user";
 
 export default function SwitchboardThemePreview() {
   const router = useRouter();
+  const { user } = useUser();
 
   return (
     <div
@@ -16,8 +18,10 @@ export default function SwitchboardThemePreview() {
 
       <div className="relative z-10 w-full max-w-4xl flex flex-col items-center gap-10">
         <PatchbayHeader />
-
-        <PatchbayIntro onPatch={() => router.push("/join")} />
+        <PatchbayIntro 
+          onPatch={() => router.push(user ? "/teams" : "/signup")} 
+          buttonText={user ? "View Teams" : "Start now"}
+        />
       </div>
     </div>
   );
