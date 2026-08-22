@@ -172,18 +172,23 @@ export function explainTeam(team: Profile[]): { strengths: string[], gaps: strin
   for (const cat of categories) {
     const skills = SKILL_TAXONOMY[cat] as readonly string[];
     let catMax = 0;
+    let bestContributor = "";
+    let bestSkill = "";
+
     for (const p of team) {
       for (const s of p.skills) {
         if (skills.includes(s.name) && s.score > catMax) {
           catMax = s.score;
+          bestContributor = p.name.split(' ')[0]; // First name only
+          bestSkill = s.name;
         }
       }
     }
     
     if (catMax >= 6) {
-      strengths.push(cat);
+      strengths.push(`${cat} (${bestContributor}: ${bestSkill} ${catMax})`);
     } else {
-      gaps.push(cat);
+      gaps.push(`${cat} (max ${catMax})`);
     }
   }
 
