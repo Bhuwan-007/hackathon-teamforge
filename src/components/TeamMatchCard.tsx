@@ -24,10 +24,14 @@ export function TeamMatchCard({
   team,
   index,
   currentProfileId,
+  onJoin,
+  onLeave,
 }: {
   team: TeamMatch;
   index: number;
   currentProfileId?: string;
+  onJoin?: () => void;
+  onLeave?: () => void;
 }) {
   const [selectedProfile, setSelectedProfile] = useState<Profile | null>(null);
   const isMyTeam = currentProfileId && team.members.some(m => m.id === currentProfileId);
@@ -45,8 +49,24 @@ export function TeamMatchCard({
             <p className="mb-2 text-[10px] font-bold uppercase tracking-[.14em] text-[#D35400]">
               MATCH ASSEMBLY {String(index + 1).padStart(2, "0")}
             </p>
-            <h2 className="font-heavy text-2xl uppercase">
+            <h2 className="font-heavy text-2xl uppercase flex items-center gap-4">
               Team {String.fromCharCode(65 + index)}
+              {currentProfileId && !isMyTeam && team.members.length < 4 && (
+                  <button 
+                    onClick={onJoin}
+                    className="text-xs border-2 border-[#2E7D32] text-[#2E7D32] hover:bg-[#2E7D32] hover:text-[#F4F1EA] px-3 py-1 transition-colors"
+                  >
+                      JOIN TEAM
+                  </button>
+              )}
+              {currentProfileId && isMyTeam && (
+                  <button 
+                    onClick={onLeave}
+                    className="text-xs border-2 border-[#D35400] text-[#D35400] hover:bg-[#D35400] hover:text-[#F4F1EA] px-3 py-1 transition-colors"
+                  >
+                      LEAVE TEAM
+                  </button>
+              )}
             </h2>
           </div>
           <div className="text-right">

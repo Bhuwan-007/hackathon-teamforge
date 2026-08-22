@@ -11,6 +11,7 @@ export type Profile = {
   interests: string[];
   availability: string[];
   team_size_preference?: number;
+  github_username?: string | null;
 };
 
 export type TeamScores = {

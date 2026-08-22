@@ -13,9 +13,7 @@ import {
   CardDescription,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { Slider } from "@/components/ui/slider";
 import { PatchbayHeader } from "@/components/PatchbayHeader";
 
@@ -132,12 +130,14 @@ export default function JoinPage() {
       return;
     }
 
+    const parsedGithub = githubUsername.trim().split('/').filter(Boolean).pop() || githubUsername.trim();
+
     // 2. Insert profile linked to auth user
     const { error: dbError } = await supabase.from("profiles").insert([
       {
         user_id: authData.user.id,
         name: `${name} (${experience})`,
-        github_username: githubUsername || null,
+        github_username: parsedGithub || null,
         skills: skillsArray,
         role_preferences: roles,
         interests,
@@ -177,7 +177,7 @@ export default function JoinPage() {
               <div className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="email">Email *</Label>
+                    <label htmlFor="email" className="font-heavy uppercase text-xs tracking-widest mb-2 block">Email *</label>
                     <Input
                       id="email"
                       type="email"
@@ -189,7 +189,7 @@ export default function JoinPage() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="password">Password *</Label>
+                    <label htmlFor="password" className="font-heavy uppercase text-xs tracking-widest mb-2 block">Password *</label>
                     <Input
                       id="password"
                       type="password"
@@ -204,7 +204,7 @@ export default function JoinPage() {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="name">Full Name *</Label>
+                    <label htmlFor="name" className="font-heavy uppercase text-xs tracking-widest mb-2 block">Full Name *</label>
                     <Input
                       id="name"
                       value={name}
@@ -215,29 +215,27 @@ export default function JoinPage() {
                     />
                   </div>
                   <div>
-                    <Label htmlFor="github">GitHub Username (Optional)</Label>
+                    <label htmlFor="github" className="font-heavy uppercase text-xs tracking-widest mb-2 block">GitHub Profile URL (Optional)</label>
                     <Input
                       id="github"
                       value={githubUsername}
                       onChange={(e) => setGithubUsername(e.target.value)}
-                      placeholder="torvalds"
+                      placeholder="https://github.com/torvalds"
                       className="rounded-none border-2 border-[#2D241E] bg-[#F4F1EA]"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <Label className="mb-2 block">Experience Level</Label>
+                  <label className="font-heavy uppercase text-xs tracking-widest mb-2 block">Experience Level</label>
                   <div className="flex gap-2">
                     {EXPERIENCE_LEVELS.map((level) => (
-                      <Badge
-                        key={level}
-                        variant={experience === level ? "default" : "outline"}
-                        className="cursor-pointer px-4 py-1"
+                      <button type="button" key={level}
+                        className={`cursor-pointer px-4 py-1.5 text-xs font-sans uppercase font-bold tracking-wider rounded-none border-2 border-[#2D241E] transition-all hover:-translate-y-0.5 ${experience === level ? 'bg-[#2D241E] text-[#F4F1EA] hard-shadow' : 'bg-[#F4F1EA] text-[#2D241E] hover:bg-[#D8D1C5]'}`}
                         onClick={() => setExperience(level)}
                       >
                         {level}
-                      </Badge>
+                      </button>
                     ))}
                   </div>
                 </div>
@@ -245,8 +243,8 @@ export default function JoinPage() {
 
               {/* Skills */}
               <div className="space-y-4">
-                <Label className="text-lg">Skills</Label>
-                <p className="text-sm text-gray-500">
+                <label className="font-heavy uppercase text-lg tracking-widest">Skills</label>
+                <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">
                   Select your skills and rate your proficiency (0-10).
                 </p>
 
@@ -258,19 +256,15 @@ export default function JoinPage() {
                     ][]
                   ).map(([category, skills]) => (
                     <div key={category} className="space-y-2">
-                      <h4 className="font-semibold text-sm">{category}</h4>
+                      <h4 className="font-heavy uppercase text-sm text-[#D35400] tracking-widest">{category}</h4>
                       <div className="flex flex-wrap gap-2">
                         {skills.map((skill) => (
-                          <Badge
-                            key={skill}
-                            variant={
-                              skill in selectedSkills ? "default" : "outline"
-                            }
-                            className="cursor-pointer"
+                          <button type="button" key={skill}
+                            className={`cursor-pointer px-3 py-1.5 text-xs font-sans uppercase font-bold tracking-wider rounded-none border-2 border-[#2D241E] transition-all hover:-translate-y-0.5 ${skill in selectedSkills ? 'bg-[#D35400] text-[#F4F1EA] border-[#D35400] hard-shadow' : 'bg-[#F4F1EA] text-[#2D241E] hover:bg-[#D8D1C5]'}`}
                             onClick={() => handleSkillToggle(skill)}
                           >
                             {skill}
-                          </Badge>
+                          </button>
                         ))}
                       </div>
                     </div>
@@ -278,7 +272,7 @@ export default function JoinPage() {
                   
                   {/* Custom Skill Input */}
                   <div className="pt-4 border-t-2 border-[#2D241E] mt-4">
-                    <h4 className="font-semibold text-sm mb-2">Other Skills</h4>
+                    <h4 className="font-heavy uppercase text-sm text-[#D35400] tracking-widest mb-3">Other Skills</h4>
                     <div className="flex gap-2">
                       <Input 
                         value={customSkill} 
@@ -295,7 +289,7 @@ export default function JoinPage() {
                       <Button 
                         type="button" 
                         onClick={handleAddCustomSkill} 
-                        className="rounded-none border-2 border-[#2D241E] bg-[#2E7D32] text-[#F4F1EA] hover:bg-[#2D241E]"
+                        className="rounded-none border-2 border-[#2D241E] bg-[#D35400] text-[#F4F1EA] font-heavy uppercase hover:bg-[#2D241E]"
                       >
                         Add
                       </Button>
@@ -306,7 +300,7 @@ export default function JoinPage() {
                 {/* Selected Skills Sliders */}
                 {Object.keys(selectedSkills).length > 0 && (
                   <div className="space-y-4 mt-6 border-2 border-[#2D241E] rounded-none p-4">
-                    <h4 className="font-semibold text-sm mb-4">
+                    <h4 className="font-heavy uppercase text-sm text-[#D35400] tracking-widest mb-4">
                       Set Proficiency Levels
                     </h4>
                     {Object.entries(selectedSkills).map(([skill, score]) => (
@@ -314,7 +308,7 @@ export default function JoinPage() {
                         key={skill}
                         className="grid grid-cols-[120px_1fr_40px] items-center gap-4"
                       >
-                        <span className="text-sm font-medium">{skill}</span>
+                        <span className="text-xs font-bold uppercase tracking-widest truncate" title={skill}>{skill}</span>
                         <Slider
                           value={[score]}
                           max={10}
@@ -326,7 +320,7 @@ export default function JoinPage() {
                             )
                           }
                         />
-                        <span className="text-sm font-mono text-right">
+                        <span className="text-xs font-heavy uppercase text-[#D35400] tracking-widest text-right">
                           {score}/10
                         </span>
                       </div>
@@ -338,53 +332,43 @@ export default function JoinPage() {
               {/* Preferences */}
               <div className="space-y-6">
                 <div>
-                  <Label className="mb-2 block">Role Preferences</Label>
+                  <label className="font-heavy uppercase text-xs tracking-widest mb-2 block">Role Preferences</label>
                   <div className="flex flex-wrap gap-2">
                     {ROLE_OPTIONS.map((role) => (
-                      <Badge
-                        key={role}
-                        variant={roles.includes(role) ? "default" : "outline"}
-                        className="cursor-pointer"
+                      <button type="button" key={role}
+                        className={`cursor-pointer px-3 py-1.5 text-xs font-sans uppercase font-bold tracking-wider rounded-none border-2 border-[#2D241E] transition-all hover:-translate-y-0.5 ${roles.includes(role) ? 'bg-[#2D241E] text-[#F4F1EA] hard-shadow' : 'bg-[#F4F1EA] text-[#2D241E] hover:bg-[#D8D1C5]'}`}
                         onClick={() => toggleArrayItem(setRoles, role)}
                       >
                         {role}
-                      </Badge>
+                      </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <Label className="mb-2 block">Interests</Label>
+                  <label className="font-heavy uppercase text-xs tracking-widest mb-2 block">Interests</label>
                   <div className="flex flex-wrap gap-2">
                     {INTEREST_OPTIONS.map((interest) => (
-                      <Badge
-                        key={interest}
-                        variant={
-                          interests.includes(interest) ? "default" : "outline"
-                        }
-                        className="cursor-pointer"
+                      <button type="button" key={interest}
+                        className={`cursor-pointer px-3 py-1.5 text-xs font-sans uppercase font-bold tracking-wider rounded-none border-2 border-[#2D241E] transition-all hover:-translate-y-0.5 ${interests.includes(interest) ? 'bg-[#2D241E] text-[#F4F1EA] hard-shadow' : 'bg-[#F4F1EA] text-[#2D241E] hover:bg-[#D8D1C5]'}`}
                         onClick={() => toggleArrayItem(setInterests, interest)}
                       >
                         {interest}
-                      </Badge>
+                      </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <Label className="mb-2 block">Availability</Label>
+                  <label className="font-heavy uppercase text-xs tracking-widest mb-2 block">Availability</label>
                   <div className="flex flex-wrap gap-2">
                     {AVAILABILITY_OPTIONS.map((avail) => (
-                      <Badge
-                        key={avail}
-                        variant={
-                          availability.includes(avail) ? "default" : "outline"
-                        }
-                        className="cursor-pointer"
+                      <button type="button" key={avail}
+                        className={`cursor-pointer px-3 py-1.5 text-xs font-sans uppercase font-bold tracking-wider rounded-none border-2 border-[#2D241E] transition-all hover:-translate-y-0.5 ${availability.includes(avail) ? 'bg-[#2D241E] text-[#F4F1EA] hard-shadow' : 'bg-[#F4F1EA] text-[#2D241E] hover:bg-[#D8D1C5]'}`}
                         onClick={() => toggleArrayItem(setAvailability, avail)}
                       >
                         {avail}
-                      </Badge>
+                      </button>
                     ))}
                   </div>
                 </div>

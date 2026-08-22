@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import * as dotenv from 'dotenv';
 import path from 'path';
+import { formTeams, explainTeam } from '../src/lib/matching/index';
 
 // Load .env.local explicitly since we're running this in a script
 dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
@@ -220,12 +221,50 @@ const mockProfiles = [
 
 async function seed() {
   console.log('Seeding profiles...');
-  const { data, error } = await supabase.from('profiles').insert(mockProfiles);
+  await supabase.from('teams').delete().neq('id', '00000000-0000-0000-0000-000000000000'); // delete all
+  await supabase.from('profiles').delete().is('user_id', null); // delete all mock profiles
+
+  // Randomize team size between 2 and 3 for the seed to leave 1-2 open slots
+  const profilesToInsert = mockProfiles.map(p => ({
+    ...p,
+    team_size_preference: Math.random() > 0.5 ? 3 : 2
+  }));
+
+  const { data: insertedProfiles, error } = await supabase.from('profiles').insert(profilesToInsert).select('*');
   
-  if (error) {
+  if (error || !insertedProfiles) {
     console.error('Error seeding profiles:', error);
+    return;
+  }
+  
+  console.log('Successfully seeded 25 profiles!');
+
+  console.log('Generating Leader-centric teams...');
+  // Form teams of 3 to leave room for users to join
+  const matches = formTeams(insertedProfiles, 3);
+  
+  // Filter only teams that have a "Lead"
+  const leaderTeams = matches.filter(team => {
+    const members = team._profiles || [];
+    return members.some(m => m.role_preferences.includes('Lead'));
+  });
+
+  const dbTeams = leaderTeams.map(team => {
+    const members = team._profiles || [];
+    const explanation = explainTeam(members);
+    return {
+      member_ids: team.memberIds,
+      scores: team.scores,
+      gaps: explanation.gaps
+    };
+  });
+
+  const { error: teamsError } = await supabase.from('teams').insert(dbTeams);
+  
+  if (teamsError) {
+    console.error('Error saving teams:', teamsError);
   } else {
-    console.log('Successfully seeded 25 profiles!');
+    console.log(`Successfully seeded ${dbTeams.length} Leader teams!`);
   }
 }
 

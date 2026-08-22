@@ -17,7 +17,9 @@ export function ProfileModal({ profile, onClose }: { profile: Profile; onClose: 
               {profile.name}
             </h2>
             {profile.github_username && (
-              <GitHubBadge username={profile.github_username} />
+              <a href={`https://github.com/${profile.github_username}`} target="_blank" rel="noreferrer" className="hover:opacity-80 transition-opacity">
+                <GitHubBadge username={profile.github_username} />
+              </a>
             )}
           </div>
           <button 
