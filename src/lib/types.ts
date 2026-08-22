@@ -27,6 +27,12 @@ export type Team = {
   gaps: string[];
 };
 
+export type TeamMatch = Team & {
+  members: Profile[];
+  strengths: string[];
+  overallMatch: number;
+};
+
 export const SKILL_TAXONOMY = {
   Frontend: ["React", "Next.js", "Vue", "Svelte", "Tailwind CSS"],
   Backend: ["Node.js", "Python", "Go", "Java", "PostgreSQL"],
@@ -35,7 +41,12 @@ export const SKILL_TAXONOMY = {
   Product: ["Product Management", "Agile", "User Research", "Roadmapping"],
   DevOps: ["Docker", "Kubernetes", "AWS", "CI/CD", "Terraform"],
   Data: ["SQL", "Pandas", "Data Visualization", "Data Engineering"],
-  Pitch: ["Public Speaking", "Slide Design", "Storytelling", "Business Strategy"],
+  Pitch: [
+    "Public Speaking",
+    "Slide Design",
+    "Storytelling",
+    "Business Strategy",
+  ],
 } as const;
 
 export type SkillCategory = keyof typeof SKILL_TAXONOMY;
