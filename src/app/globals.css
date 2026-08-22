@@ -1,8 +1,11 @@
-@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Cousine:wght@400;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap");
+
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-
+h2.font-heavy {
+  font-family: "Cousine", monospace;
+}
 .font-heavy {
   font-family: "Bricolage Grotesque", sans-serif;
 }
@@ -21,6 +24,44 @@
 .hard-shadow:active {
   transform: translate(4px, 4px);
   box-shadow: 2px 2px 0px #2d241e;
+}
+.switchboard-panel {
+  background: #faf9f6;
+  border: 4px solid #2d241e;
+  box-shadow: 6px 6px 0 #2d241e;
+}
+.switchboard-button {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: #f4d03f;
+  border: 4px solid #2d241e;
+  padding: 1.25rem 2rem;
+  color: #2d241e;
+  box-shadow: 6px 6px 0 #2d241e;
+  transition: all 0.2s ease;
+}
+.switchboard-button:hover {
+  background: #ffe16b;
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 #2d241e;
+}
+.switchboard-button:active {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0 #2d241e;
+}
+.switchboard-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  border: 4px solid #2d241e;
+}
+.switchboard-icon--orange {
+  background: #d35400;
+}
+.switchboard-icon--dark {
+  background: #2d241e;
 }
 @keyframes blink {
   0%,

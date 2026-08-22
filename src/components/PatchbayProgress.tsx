@@ -1,7 +1,7 @@
 export function PatchbayProgress({ stage }: { stage: string }) {
   return (
     <section
-      className="w-full max-w-md bg-[#FAF9F6] border-4 border-[#2D241E] p-8 hard-shadow flex flex-col items-center gap-8 my-12"
+      className="switchboard-panel w-full max-w-md p-8 flex flex-col items-center gap-8 my-12"
       aria-live="polite"
     >
       <div className="flex gap-4">

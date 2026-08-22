@@ -46,10 +46,10 @@ export function AssemblyDashboard({ onReset }: { onReset: () => void }) {
           Disconnect &amp; Reset
         </button>
       </div>
-      <div className="bg-[#FAF9F6] border-4 border-[#2D241E] hard-shadow w-full flex flex-col">
+      <div className="switchboard-panel w-full flex flex-col">
         <div className="border-b-4 border-[#2D241E] bg-[#D8D1C5] p-4 flex flex-col md:flex-row gap-6 md:gap-12 justify-between items-start md:items-center">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-[#2D241E] rounded-full flex items-center justify-center">
+            <div className="switchboard-icon switchboard-icon--dark w-12 h-12">
               <Cable className="w-6 h-6 text-[#4ADE80]" />
             </div>
             <div>
