@@ -26,7 +26,7 @@ export default function SwitchboardThemePreview() {
     let stage = 0;
     const interval = setInterval(() => {
       stage += 1;
-      if (stage < stages.length) {
+      if (stage < patchStages.length) {
         setPatchStage(stage);
       } else {
         clearInterval(interval);
@@ -83,9 +83,7 @@ export default function SwitchboardThemePreview() {
           <PatchbayIntro onPatch={handlePatch} />
         )}
 
-        {isPatching && (
-          <PatchbayProgress stage={patchStages[patchStage]} />
-        )}
+        {isPatching && <PatchbayProgress stage={patchStages[patchStage]} />}
 
         {circuitReady && (
           <AssemblyDashboard onReset={() => setCircuitReady(false)} />

@@ -1,18 +1,66 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap');
 
-.font-heavy { font-family: 'Bricolage Grotesque', sans-serif; }
-.pegboard-bg { background-image: radial-gradient(#D8D1C5 2px, transparent 2px); background-size: 30px 30px; }
-.hard-shadow { box-shadow: 6px 6px 0px #2D241E; transition: all 0.2s ease; }
-.hard-shadow:hover { transform: translate(-2px, -2px); box-shadow: 8px 8px 0px #2D241E; }
-.hard-shadow:active { transform: translate(4px, 4px); box-shadow: 2px 2px 0px #2D241E; }
-@keyframes blink { 0%, 100% { opacity: 1; box-shadow: 0 0 10px #D35400; } 50% { opacity: 0.4; box-shadow: none; } }
-.led-blink { animation: blink 1s infinite; }
-.led-blink-fast { animation: blink 0.3s infinite; }
-.scanlines { position: relative; }
-.scanlines::before { content: " "; display: block; position: absolute; inset: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03)); z-index: 10; background-size: 100% 4px, 6px 100%; pointer-events: none; }
+.font-heavy {
+  font-family: "Bricolage Grotesque", sans-serif;
+}
+.pegboard-bg {
+  background-image: radial-gradient(#d8d1c5 2px, transparent 2px);
+  background-size: 30px 30px;
+}
+.hard-shadow {
+  box-shadow: 6px 6px 0px #2d241e;
+  transition: all 0.2s ease;
+}
+.hard-shadow:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0px #2d241e;
+}
+.hard-shadow:active {
+  transform: translate(4px, 4px);
+  box-shadow: 2px 2px 0px #2d241e;
+}
+@keyframes blink {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 10px #d35400;
+  }
+  50% {
+    opacity: 0.4;
+    box-shadow: none;
+  }
+}
+.led-blink {
+  animation: blink 1s infinite;
+}
+.led-blink-fast {
+  animation: blink 0.3s infinite;
+}
+.scanlines {
+  position: relative;
+}
+.scanlines::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%),
+    linear-gradient(
+      90deg,
+      rgba(255, 0, 0, 0.03),
+      rgba(0, 255, 0, 0.01),
+      rgba(0, 0, 255, 0.03)
+    );
+  z-index: 10;
+  background-size:
+    100% 4px,
+    6px 100%;
+  pointer-events: none;
+}
 
 @custom-variant dark (&:is(.dark *));
 

@@ -8,8 +8,12 @@ export function PatchbayHeader() {
           <Radio className="w-5 h-5 text-[#F4F1EA]" />
         </div>
         <div>
-          <h1 className="font-heavy text-3xl font-extrabold uppercase tracking-tight text-[#2D241E] leading-none">Patchbay_OS</h1>
-          <p className="text-xs font-bold text-[#D35400] uppercase tracking-widest mt-1">Analog Team Assembly</p>
+          <h1 className="font-heavy text-3xl font-extrabold uppercase tracking-tight text-[#2D241E] leading-none">
+            Patchbay_OS
+          </h1>
+          <p className="text-xs font-bold text-[#D35400] uppercase tracking-widest mt-1">
+            Analog Team Assembly
+          </p>
         </div>
       </div>
       <div className="px-4 py-2 bg-[#FAF9F6] border-4 border-[#2D241E] hard-shadow flex items-center gap-3">
