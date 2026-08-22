@@ -7,10 +7,10 @@ export type Profile = {
   id: string;
   name: string;
   skills: SkillProficiency[];
-  rolePreferences: string[];
+  role_preferences: string[];
   interests: string[];
   availability: string[];
-  teamSizePreference?: number;
+  team_size_preference?: number;
 };
 
 export type TeamScores = {
