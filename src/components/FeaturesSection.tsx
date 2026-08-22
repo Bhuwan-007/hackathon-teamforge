@@ -5,10 +5,10 @@ type FeaturesSectionProps = { features: Feature[] };
 export function FeaturesSection({ features }: FeaturesSectionProps) {
   return (
     <section
-      className="border-y border-violet-300/15 bg-[#171123] px-5 py-20 sm:px-8 lg:px-10 lg:py-26"
+      className="border-y border-violet-300/15 bg-[#171123] px-5 py-20 sm:px-8 lg:px-10 lg:py-24"
       id="features"
     >
-      <div className="mx-auto max-w-300">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-12 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
           <div>
             <span className="font-mono text-[11px] tracking-[.14em] text-[#70e8d2]">
